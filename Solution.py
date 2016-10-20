@@ -19,8 +19,7 @@ class Solution(object):
     def subsetsIterExpansion(self, nums):             
         s = [[]]
         for num in nums: # adding one more each time
-            tmp = deepcopy(s)
-            for elem in tmp:
+            for elem in deepcopy(s):
                 elem.append(num)
                 s.append(elem)              
         return s
@@ -40,31 +39,45 @@ class Solution(object):
         return s
 
 
-    """ [Backward] Recursively build upon subsets of smaller size: O(2^n) """
+    """ [Forward/Prefix] Recursively build upon subsets of smaller size: O(2^n) """
+    def subsetsRecursivePrefix(self, nums):       
+        s = [[]]
+        self.subsetsRecursivePrefixHelper(nums, 0, s)     
+        return results
+
+    def subsetsRecursivePrefixHelper(self, nums, p, s):       
+        if p == len(nums): return
+        for sub in deepcopy(s):
+            sub.append(nums[p])
+            s.append(sub)
+        self.subsetsRecursivePrefixHelper(nums, p+1, s)
+
+
+    """ [Backward/Suffix] Recursively build upon subsets of smaller size: O(2^n) """
     def subsetsRecursiveSuffix(self, nums):       
         return self.subsetsRecursiveSuffixHelper(nums, 0)
     
     def subsetsRecursiveSuffixHelper(self, nums, p):
         if p == len(nums): return [[]] # !     
-        subres = self.subsetsRecursiveSuffixHelper(nums, p+1)
-        res = deepcopy(subres)
-        for s in subres:
-            s.append(nums[p])          
-            res.append(s)      
-        return res
+        subs = self.subsetsRecursiveSuffixHelper(nums, p+1)
+        s = deepcopy(subres)
+        for sub in subs:
+            sub.append(nums[p])          
+            s.append(sub)      
+        return s
 
 
-    """ [Forward] Recursively build upon subsets of smaller size: O(2^n + n^2) = O(2^n) """
-    def subsetsRecursivePrefix(self, nums):       
-        result, results = [], [[]] # !
-        self.subsetsRecursivePrefixHelper(nums, result, results, 0)     
+    """ [Backtracking] Recursively decide what to put next: O(2^n + n^2) = O(2^n) """
+    def subsetsRecursiveBacktracking(self, nums):       
+        sub, subs = [], [[]] # !
+        self.subsetsRecursiveBacktrackingHelper(nums, sub, subs, 0)     
         return results
 
-    def subsetsRecursivePrefixHelper(self, nums, result, results, p):       
-        for i in range(p, len(nums)): # decide what to put at pth position        
-            result.append(nums[i])
-            results.append(deepcopy(result))
-            self.subsetsRecursivePrefixHelper(nums, result, results, i+1)
+    def subsetsRecursiveBacktrackingHelper(self, nums, sub, subs, p):       
+        for i in range(p, len(nums)): # explore all options        
+            sub.append(nums[i])
+            subs.append(deepcopy(sub))
+            self.subsetsRecursiveBacktrackingHelper(nums, sub, subs, i+1) # i+1, larger index only
             result.pop()
 
 
@@ -91,6 +104,24 @@ class Solution(object):
                 s.append(elem)       
         return s
     
+
+    """ [Forward/Prefix] Recursively build upon subsets of smaller size: O(2^n) """
+    def subsetsWithDupRecursivePrefix(self, nums):
+        nums.sort() # sort!
+        s = [[]]
+        self.subsetsWithDupRecursivePrefixHelper(nums, 0, s, 0)     
+        return s
+
+    def subsetsWithDupRecursivePrefixHelper(self, nums, p, s, latest):       
+        if p == len(nums): return
+        subs = deepcopy(s)
+        if p > 0 and nums[p] != nums[p-1]: latest = 0
+        for sub in subs[latest:]:
+            sub.append(nums[p])
+            s.append(sub)
+        self.subsetsWithDupRecursivePrefixHelper(nums, p+1, s, len(subs))
+        
+    
     """ [Backward] Recursively build upon subsets of smaller size: O(2^n) """
     def subsetsWithDupRecursiveSuffix(self, nums): 
         nums.sort() # sort!
@@ -112,7 +143,7 @@ class Solution(object):
         return res, len(subres)
 
 
-    """ [Forward] Recursively build upon subsets of smaller size: O(2^n + n^2) = O(2^n) """
+    """ [Backtracking] Recursively decide what to put next: O(2^n + n^2) = O(2^n) """
     def subsetsWithDupRecursivePrefix(self, nums):
         nums.sort() # sort!
         result, results = [], [[]] # !
