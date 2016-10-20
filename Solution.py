@@ -5,10 +5,6 @@ class Solution(object):
 
     """
     Combinatorics
-
-    Subsets:
-    # alternative method: bit representation
-    
     
     """
     # 78
