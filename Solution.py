@@ -159,3 +159,112 @@ class Solution(object):
             result.pop()
 
 
+    # 77. Combinations
+    def combine(self, n, k):
+        r, rs = [], []
+        self.combineHelper(n, k, 1, r, rs)
+        return rs
+
+    def combineHelper(self, n, k, p, r, rs):
+        if p + k > n + 1:
+            return
+        
+        if k == 0:
+            rs.append(r[:])
+            return
+        
+        k -= 1
+        for i in range(p, n+1):
+            r.append(i)
+            self.combineHelper(n, k, i+1, r, rs)
+            r.pop()
+
+
+    # 39. Combination Sum
+    def combinationSum(self, candidates, target):
+        candidates = list(set(candidates))
+        candidates.sort()
+        r, rs = [], []
+        self.combinationSumHelper(candidates, target, 0, r, rs)
+        return rs
+
+    def combinationSumHelper(self, candidates, target, p, r, rs):
+        if target == 0:
+            rs.append(r[:])
+            return
+
+        for i in range(p, len(candidates)):
+            if target < candidates[i]: return # early termination
+            r.append(candidates[i])
+            self.combinationSumHelper(candidates, target-candidates[i], i, r, rs) # from i
+            r.pop()
+            
+
+    # 40. Combination Sum II
+    def combinationSum2(self, candidates, target):
+        candidates.sort()
+        r, rs = [], []
+        self.combinationSum2Helper(candidates, target, 0, r, rs)
+        return rs
+
+    def combinationSum2Helper(self, candidates, target, p, r, rs):
+        if target == 0:
+            rs.append(r[:])
+            return
+
+        for i in range(p, len(candidates)):
+            if i > p and candidates[i] == candidates[i-1]: # skip dups at current position
+                continue
+                
+            if target < candidates[i]: return # early termination
+            r.append(candidates[i])
+            self.combinationSum2Helper(candidates, target-candidates[i], i+1, r, rs) # from i
+            r.pop()
+
+
+    # 216. Combination Sum III
+    def combinationSum3(self, k, n):
+         r, rs = [], []
+         self.combinationSum3Helper(k, n, 0, r, rs)
+         return rs
+
+    def combinationSum3Helper(self, k, n, p, r, rs):
+        if n == 0 and k == 0: # !
+            rs.append(r[:])
+            return
+
+        if k == 0:
+            return
+
+        k -= 1
+        for i in range(p, 10):
+            if i > n: return
+            r.append(i)
+            self.combinationSum3Helper(k, n-i, i+1, r, rs)
+            r.pop()
+
+
+    # 377. Combination Sum IV
+    def combinationSum4(self, nums, target):
+        nums.sort() # no dups by assumption
+        dp = {}
+        return self.combinationSum4Helper(nums, target, dp)
+
+    def combinationSum4Helper(self, nums, target, dp):
+        if target == 0:
+            return 1
+
+        counts = 0
+        for num in nums:
+            newtarget = target - num
+            
+            if newtarget < 0: return # early termination
+  
+            if newtarget in dp:
+                counts += dp[newtarget]            
+            else:
+                c = self.combinationSum4Helper(nums, newtarget, dp)
+                dp[newtarget]= c
+                counts += c
+
+        return counts
