@@ -159,53 +159,6 @@ class Solution(object):
             result.pop()
 
 
-<<<<<<< HEAD
-    #46. Permutations
-    """ Swapping method. But essentially, it is building upon solutions to same problem of
-        smaller sizes in a recursive way (which can be proved by induction)
-    """
-    def permute(self, nums):
-        rs = []
-        self.permuteHelper(0, nums, rs)        
-        return rs
-
-    def permuteHelper(self, p, nums, rs):
-        if p == len(nums) - 1:
-            rs.append(nums[:])
-
-        for i in range(p, len(nums)):
-            nums[i], nums[p] = nums[p], nums[i]
-            self.permuteHelper(p+1, nums, rs)
-            nums[i], nums[p] = nums[p], nums[i]
-
-    """ Figure out the difference in examples where there is dups.
-        Need to avoid swapping with identicals to create same braching nodes. (not sufficient)
-        Actually need to avoid placing the same number to a particular position. """
-    def permuteUnique(self, nums):
-        rs = []
-        self.permuteUniqueHelper(0, nums, rs)        
-        return rs
-    
-    def permuteUniqueHelper(self, p, nums, rs):
-    def permuteUnique(self, nums):
-        rs = []
-        self.permuteUniqueHelper(0, nums, rs)        
-        return rs
-    
-    def permuteUniqueHelper(self, p, nums, rs):
-        if p == len(nums) - 1:
-            rs.append(nums[:])
-            return # don't forget
-        
-        visited = set()
-        for i in range(p, len(nums)):
-            #if i > p and nums[i] == nums[p]: continue (problematic)
-            if i > p and nums[i] in visited: continue
-            visited.add(nums[i])
-            nums[i], nums[p] = nums[p], nums[i]
-            self.permuteUniqueHelper(p+1, nums, rs)
-            nums[i], nums[p] = nums[p], nums[i]        
-=======
     # 77. Combinations
     def combine(self, n, k):
         r, rs = [], []
@@ -315,4 +268,46 @@ class Solution(object):
                 counts += c
 
         return counts
->>>>>>> ace64366a595a1aeb8470c7494b6fc00b35ef64c
+
+
+    #46. Permutations
+    """ Swapping method. But essentially, it is building upon solutions to same problem of
+        smaller sizes in a recursive way (which can be proved by induction)
+    """
+    def permute(self, nums):
+        rs = []
+        self.permuteHelper(0, nums, rs)        
+        return rs
+
+    def permuteHelper(self, p, nums, rs):
+        if p == len(nums) - 1:
+            rs.append(nums[:])
+
+        for i in range(p, len(nums)):
+            nums[i], nums[p] = nums[p], nums[i]
+            self.permuteHelper(p+1, nums, rs)
+            nums[i], nums[p] = nums[p], nums[i]
+
+
+    """ Figure out the difference in examples where there is dups.
+        Need to avoid swapping with identicals to create same braching nodes. (not sufficient)
+        Actually need to avoid placing the same number to a particular position. """
+    def permuteUnique(self, nums):
+        rs = []
+        self.permuteUniqueHelper(0, nums, rs)        
+        return rs
+    
+    def permuteUniqueHelper(self, p, nums, rs):
+        if p == len(nums) - 1:
+            rs.append(nums[:])
+            return # don't forget
+        
+        visited = set()
+        for i in range(p, len(nums)):
+            #if i > p and nums[i] == nums[p]: continue (problematic)
+            if i > p and nums[i] in visited: continue
+            visited.add(nums[i])
+            nums[i], nums[p] = nums[p], nums[i]
+            self.permuteUniqueHelper(p+1, nums, rs)
+            nums[i], nums[p] = nums[p], nums[i]        
+
